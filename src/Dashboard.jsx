@@ -40,6 +40,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 import DashList from "./DashList";
 import Users from "./Users";
+import UserModal from "./UserModal";
 
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -122,6 +123,22 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [newUser, setNewUser] = React.useState({});
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleFormSubmit = (formValues) => {
+    const jsonFormValues = formValues;
+    setNewUser(jsonFormValues);
   };
 
   const curDT = new Date().toUTCString().substring(0, 22);
@@ -285,14 +302,20 @@ export default function Dashboard() {
               className="add-new-btn"
               variant="contained"
               sx={{ backgroundColor: "#22a565" }}
+              onClick={handleClickOpen}
             >
               + Add New
             </Button>
           </Box>
+          <UserModal
+            open={openDialog}
+            handleClose={handleClose}
+            handleFormSubmit={handleFormSubmit}
+          />
 
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <Users />
+              <Users newUsers={newUser} />
             </Paper>
           </Grid>
           <Copyright sx={{ pt: 4 }} />

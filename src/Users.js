@@ -153,7 +153,7 @@ const rows = [
   },
 ];
 
-export default function Users() {
+export default function Users({ newUsers }) {
   const [fullnamesearchVal, setFullNameSearchVal] = React.useState("");
   const [usernamesearchVal, setUserNameSearchVal] = React.useState("");
   const [users, setUsers] = React.useState(rows);
@@ -168,6 +168,19 @@ export default function Users() {
       ? setUsers(rows)
       : setUsers(rows.filter((item) => status.includes(item.status)));
   }, [status]);
+  React.useEffect(() => {
+    var updatedRows = {};
+    let tempObj = newUsers;
+    console.log("my new users =>>>>> ", newUsers);
+    if (Object.keys(newUsers).length === 0) {
+      updatedRows = [...users];
+    } else {
+      tempObj.id = users.length + 1;
+      updatedRows = [...users, tempObj];
+    }
+    setUsers(updatedRows);
+    console.log("this is ny usrss", users);
+  }, [newUsers]);
 
   const searchFullName = (value) => {
     console.log(value);
