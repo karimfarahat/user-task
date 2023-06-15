@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import { MenuItem } from "@mui/material";
+import { InputLabel, MenuItem } from "@mui/material";
 
 import { Search } from "@mui/icons-material";
 import dayjs from "dayjs";
@@ -237,6 +237,7 @@ export default function Users({ newUsers, handleEdit }) {
             value={usernamesearchVal}
           />
           <FormControl label="User Status" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel>User Status</InputLabel>
             <Select
               defaultValue="any"
               value={status}
@@ -246,6 +247,7 @@ export default function Users({ newUsers, handleEdit }) {
                 console.log("value =>>>>>>", e.target.value);
                 console.log("state =>>>>> ", status);
               }}
+              label="User Status"
               displayEmpty
               multiple
               inputProps={{
