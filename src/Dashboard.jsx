@@ -127,13 +127,22 @@ export default function Dashboard() {
 
   const [openDialog, setOpenDialog] = React.useState(false);
   const [newUser, setNewUser] = React.useState({});
+  const [editUser, setEditUser] = React.useState({});
 
   const handleClickOpen = () => {
     setOpenDialog(true);
+    setEditUser({});
   };
 
   const handleClose = () => {
     setOpenDialog(false);
+  };
+
+  const handleEdit = (e) => {
+    setOpenDialog(true);
+
+    console.log("onclick event", e.row);
+    setEditUser(e.row);
   };
 
   const handleFormSubmit = (formValues) => {
@@ -311,11 +320,12 @@ export default function Dashboard() {
             open={openDialog}
             handleClose={handleClose}
             handleFormSubmit={handleFormSubmit}
+            editUser={editUser}
           />
 
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <Users newUsers={newUser} />
+              <Users newUsers={newUser} handleEdit={handleEdit} />
             </Paper>
           </Grid>
           <Copyright sx={{ pt: 4 }} />

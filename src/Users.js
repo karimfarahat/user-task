@@ -153,7 +153,7 @@ const rows = [
   },
 ];
 
-export default function Users({ newUsers }) {
+export default function Users({ newUsers, handleEdit }) {
   const [fullnamesearchVal, setFullNameSearchVal] = React.useState("");
   const [usernamesearchVal, setUserNameSearchVal] = React.useState("");
   const [users, setUsers] = React.useState(rows);
@@ -174,6 +174,15 @@ export default function Users({ newUsers }) {
     console.log("my new users =>>>>> ", newUsers);
     if (Object.keys(newUsers).length === 0) {
       updatedRows = [...users];
+    } else if (newUsers.id > 0 || newUsers.id < 10) {
+      updatedRows = users.map((item) => {
+        if (tempObj.id === item.id) {
+          //item return
+          return tempObj;
+        } else {
+          return item;
+        }
+      });
     } else {
       tempObj.id = users.length + 1;
       updatedRows = [...users, tempObj];
@@ -291,7 +300,7 @@ export default function Users({ newUsers }) {
           }}
           pageSizeOptions={[5]}
           checkboxSelection
-          disableRowSelectionOnClick
+          onRowClick={handleEdit}
         />
       </Box>
     </React.Fragment>

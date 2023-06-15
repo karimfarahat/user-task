@@ -1,15 +1,19 @@
-import * as React from "react";
+import { React, useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function UserModal({ open, handleClose, handleFormSubmit }) {
-  const [formValues, setFormValues] = React.useState({
+export default function UserModal({
+  open,
+  handleClose,
+  handleFormSubmit,
+  editUser,
+}) {
+  const [formValues, setFormValues] = useState({
     fullname: "",
     username: "",
     email: "",
@@ -32,6 +36,22 @@ export default function UserModal({ open, handleClose, handleFormSubmit }) {
     handleFormSubmit(formValues);
     handleClose();
   };
+
+  useEffect(() => {
+    if (Object.keys(editUser).length != 0) {
+      setFormValues(editUser);
+    } else {
+      setFormValues({
+        fullname: "",
+        username: "",
+        email: "",
+        group: "",
+        status: "",
+        created_on: "Dec 10, 2022",
+        id: null,
+      });
+    }
+  }, [editUser]);
 
   return (
     <div>
@@ -97,7 +117,9 @@ export default function UserModal({ open, handleClose, handleFormSubmit }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Add User</Button>
+          <Button onClick={handleSubmit}>
+            {Object.keys(editUser).length !== 0 ? "Edit User" : "Add User"}
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
