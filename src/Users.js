@@ -333,7 +333,7 @@ export default function Users({ newUsers, handleEdit }) {
             <DatePicker
               defaultValue="All Times"
               label="Creation Date"
-              value={value === "All Times" ? "All Times" : value}
+              value={value === "All Times" ? dayjs("2020-01-01") : value}
               sx={{ m: 1 }}
               onChange={(newValue) => setValue(newValue)}
             />
