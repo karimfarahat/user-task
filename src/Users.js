@@ -5,24 +5,78 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import { InputLabel, MenuItem } from "@mui/material";
+import { InputLabel, MenuItem, Link, Button, Divider } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 
+import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import LockIcon from "@mui/icons-material/Lock";
 import { Search } from "@mui/icons-material";
 import dayjs from "dayjs";
-// import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DataGrid } from "@mui/x-data-grid";
+import { TableCell, TableBody, TableRow, Typography } from "@mui/material";
+
+function getRandomColor(factor) {
+  // Generate random RGB values between 0 and 255
+  const r = factor + Math.floor(Math.random() * 56);
+  const g = factor + Math.floor(Math.random() * 56);
+  const b = factor + Math.floor(Math.random() * 56);
+
+  // Construct the color string in the format "rgb(r, g, b)"
+  const color = `rgb(${r}, ${g}, ${b})`;
+
+  return color;
+}
 
 const columns = [
-  { field: "id", headerName: "ID", width: 90 },
   {
     field: "fullname",
     headerName: "Full name",
-    width: 150,
+    width: 250,
     editable: true,
+    renderCell: (params) => {
+      const { row } = params;
+      const initials = row.fullname
+        .split(" ")
+        .map((name) => name.charAt(0))
+        .join("");
+      const randomBackgroundColor = getRandomColor(200);
+      const randomTextColor = getRandomColor(30);
+      return (
+        <TableBody>
+          <TableRow>
+            <TableCell
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <IconButton
+                sx={{
+                  color: randomTextColor,
+                  backgroundColor: randomBackgroundColor,
+                  fontSize: "12px",
+                  width: "30px",
+                  height: "30px",
+                  fontWeight: "bold",
+                }}
+              >
+                {initials}
+              </IconButton>
+              {row.fullname}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      );
+    },
   },
   {
     field: "username",
@@ -158,13 +212,12 @@ export default function Users({ newUsers, handleEdit }) {
   const [usernamesearchVal, setUserNameSearchVal] = React.useState("");
   const [users, setUsers] = React.useState(rows);
   const [status, setStatus] = React.useState([""]);
-  const [value, setValue] = React.useState([
-    dayjs("2022-04-17"),
-    dayjs("2022-04-21"),
-  ]);
+  const [value, setValue] = React.useState("All Times");
+  const [selected, setSelected] = React.useState(null);
+
   console.log(status);
   React.useEffect(() => {
-    status.includes("") || status.length == 0
+    status.includes("") || status.length === 0
       ? setUsers(rows)
       : setUsers(rows.filter((item) => status.includes(item.status)));
   }, [status]);
@@ -174,7 +227,9 @@ export default function Users({ newUsers, handleEdit }) {
     console.log("my new users =>>>>> ", newUsers);
     if (Object.keys(newUsers).length === 0) {
       updatedRows = [...users];
-    } else if (newUsers.id > 0 || newUsers.id < 10) {
+      console.log("first", tempObj);
+    } else if (tempObj.id != null) {
+      console.log("sencond", tempObj);
       updatedRows = users.map((item) => {
         if (tempObj.id === item.id) {
           //item return
@@ -184,9 +239,12 @@ export default function Users({ newUsers, handleEdit }) {
         }
       });
     } else {
-      tempObj.id = users.length + 1;
+      tempObj.id = users[users.length - 1].id + 1;
       updatedRows = [...users, tempObj];
+      console.log("tempObj", tempObj);
+      console.log("Updated rows", updatedRows);
     }
+    console.log("updated row", updatedRows);
     setUsers(updatedRows);
     console.log("this is ny usrss", users);
   }, [newUsers]);
@@ -201,6 +259,15 @@ export default function Users({ newUsers, handleEdit }) {
       )
     );
   };
+
+  const handleDelete = () => {
+    console.log(selected);
+    setSelected(null);
+    return setUsers((prevUsers) =>
+      prevUsers.filter((item) => item.id != selected)
+    );
+  };
+
   const searchUserName = (value) => {
     // console.log(value);
     setUserNameSearchVal(value);
@@ -219,7 +286,7 @@ export default function Users({ newUsers, handleEdit }) {
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <TextField
             placeholder="Search..."
-            sx={{ m: 1, width: "35ch" }}
+            sx={{ m: 1 }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -232,7 +299,7 @@ export default function Users({ newUsers, handleEdit }) {
           />
           <TextField
             placeholder="User Name"
-            sx={{ m: 1, width: "18ch" }}
+            sx={{ m: 1 }}
             onChange={(e) => searchUserName(e.target.value)}
             value={usernamesearchVal}
           />
@@ -253,25 +320,8 @@ export default function Users({ newUsers, handleEdit }) {
               inputProps={{
                 name: "User Status",
                 id: "status-select",
-                // "aria-label": "Without label",
               }}
             >
-              {/* <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Label"
-                />
-                <FormControlLabel
-                  required
-                  control={<Checkbox />}
-                  label="Required"
-                />
-                <FormControlLabel
-                  disabled
-                  control={<Checkbox />}
-                  label="Disabled"
-                />
-              </FormGroup> */}
               <MenuItem value={""}>Any</MenuItem>
               <MenuItem value={"Locked"}>Locked</MenuItem>
               <MenuItem value={"Inactive"}>Inactive</MenuItem>
@@ -280,15 +330,111 @@ export default function Users({ newUsers, handleEdit }) {
           </FormControl>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {/* <DemoContainer components={["DateRangePicker", "DateRangePicker"]}>
-              <DemoItem label="Controlled picker" component="DateRangePicker"> */}
             <DatePicker
+              defaultValue="All Times"
               label="Creation Date"
-              value={value}
+              value={value === "All Times" ? "All Times" : value}
               sx={{ m: 1 }}
               onChange={(newValue) => setValue(newValue)}
             />
           </LocalizationProvider>
+          <Link underline="none" component="button">
+            All Filters
+          </Link>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+          }}
+        >
+          <Typography overflow={"visible"} sx={{ color: "text.dark" }}>
+            {selected == null || selected.length == 0
+              ? ""
+              : selected.length + " rows selected"}
+          </Typography>
+          {!(selected == null || selected.length == 0) && (
+            <Divider orientation="vertical" flexItem />
+          )}
+          <Button
+            sx={{
+              p: 0,
+              m: 0,
+              minWidth: 30,
+
+              backgroundColor: "button.grey",
+              position: "sticky",
+            }}
+          >
+            <ModeEditOutlineIcon sx={{ color: "text.dark" }} />
+          </Button>
+          <Button
+            aria-label="delete"
+            onClick={handleDelete}
+            sx={{
+              p: 0,
+              m: 0,
+              minWidth: 30,
+
+              backgroundColor: "button.grey",
+              position: "sticky",
+            }}
+          >
+            <NotInterestedIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+          </Button>
+          <Button
+            sx={{
+              p: 0,
+              m: 0,
+              minWidth: 30,
+
+              backgroundColor: "button.grey",
+              position: "sticky",
+            }}
+          >
+            <LockIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "button.grey",
+              position: "sticky",
+              textTransform: "none",
+            }}
+          >
+            <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
+              Assign to Profile
+            </Typography>
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "button.grey",
+              position: "sticky",
+
+              textTransform: "none",
+            }}
+          >
+            <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
+              Assign to Group
+            </Typography>
+          </Button>
+          <Button
+            sx={{
+              p: 0,
+              m: 0,
+              minWidth: 30,
+
+              backgroundColor: "button.grey",
+              position: "sticky",
+            }}
+          >
+            <MoreVertIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+          </Button>
+          <Link
+            component="button"
+            sx={{ fontSize: "12px", color: "text.dark" }}
+          >
+            Unselect all
+          </Link>
         </Box>
         <DataGrid
           rows={users}
@@ -296,13 +442,14 @@ export default function Users({ newUsers, handleEdit }) {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
+                pageSize: 10,
               },
             },
           }}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[10]}
           checkboxSelection
           onRowClick={handleEdit}
+          onRowSelectionModelChange={(item) => setSelected(item)}
         />
       </Box>
     </React.Fragment>

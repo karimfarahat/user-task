@@ -24,7 +24,6 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -49,6 +48,32 @@ import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
 import { Search } from "@mui/icons-material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    background: {
+      paper: "#fff",
+    },
+    text: {
+      primary: "#050e2d",
+      secondary: "#828796",
+      white: "#fff",
+      dark: "#51576d",
+    },
+    state: {
+      hover: "#15d176",
+    },
+    button: {
+      green: "#22a565",
+      white: "#fbfbfc",
+      grey: "#e7e9ef",
+    },
+  },
+});
+
+const grayColor = "#828796";
+const navyColor = "#050e2d";
 
 function Copyright(props) {
   return (
@@ -68,7 +93,7 @@ function Copyright(props) {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 242;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -78,6 +103,11 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  "& .MuiAppBar-root": {
+    position: "fixed",
+    left: 0,
+    right: "auto",
+  },
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -88,36 +118,72 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   zIndex: theme.zIndex.drawer + 1,
+//   transition: theme.transitions.create(["width", "margin"], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   ...(open && {
+//     marginLeft: drawerWidth,
+//     width: `calc(100% - ${drawerWidth}px)`,
+//     transition: theme.transitions.create(["width", "margin"], {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//   }),
+// }));
+
+// const Drawer = styled(MuiDrawer, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   "& .MuiDrawer-paper": {
+//     position: "relative",
+//     whiteSpace: "nowrap",
+//     width: drawerWidth,
+//     transition: theme.transitions.create("width", {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//     boxSizing: "border-box",
+//     ...(!open && {
+//       overflowX: "hidden",
+//       transition: theme.transitions.create("width", {
+//         easing: theme.transitions.easing.sharp,
+//         duration: theme.transitions.duration.leavingScreen,
+//       }),
+//       width: theme.spacing(7),
+//       [theme.breakpoints.up("sm")]: {
+//         width: theme.spacing(9),
+//       },
+//     }),
+//   },
+// }));
+
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
-    width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
+    overflowX: "hidden",
     ...(!open && {
-      overflowX: "hidden",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
     }),
   },
 }));
 
 // const ariaLabel = { "aria-label": "description" };
-// TODO remove, this demo shouldn't need to reset the theme.
-const grayColor = "#828796";
-const navyColor = "#050e2d";
 
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
@@ -145,6 +211,14 @@ export default function Dashboard() {
     setEditUser(e.row);
   };
 
+  //   const handleDelete = () => {
+  //   if (selectedRow) {
+  //     const updatedRows = users.filter((row) => row.id !== selectedRow.id);
+  //     setUsers(updatedRows);
+  //     setSelectedRow(null);
+  //   }
+  // };
+
   const handleFormSubmit = (formValues) => {
     const jsonFormValues = formValues;
     setNewUser(jsonFormValues);
@@ -152,185 +226,211 @@ export default function Dashboard() {
 
   const curDT = new Date().toUTCString().substring(0, 22);
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar color="default" position="absolute" open={open}>
-        <Toolbar
-          sx={{
-            pr: "24px",
-            color: "GrayText", // keep right padding when drawer closed
-          }}
-        >
-          <IconButton
-            edge="start"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar color="default" position="absolute" open={open}>
+          <Toolbar
             sx={{
-              marginRight: "36px",
-              color: "#777777",
-              ...(open && { display: "flex" }),
+              pr: "24px",
+              color: "GrayText", // keep right padding when drawer closed
             }}
           >
-            <ChevronLeftIcon
-              sx={{ display: "none", ...(open && { display: "flex" }) }}
-            />
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            align="left"
-            component="h1"
-            variant="subtitle1"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1, fontWeight: "bold" }}
-          >
-            Good Morning!
-            <Typography
-              variant="span"
-              sx={{ fontWeight: "normal", marginLeft: "10px" }}
-            >
-              {curDT}
-            </Typography>
-          </Typography>
-
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <IconButton color="inherit">
-              <HelpOutlineIcon />
-            </IconButton>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="primary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Typography
-              variant="subtitle1"
-              color="initial"
-              sx={{ color: navyColor, fontWeight: "bold" }}
-            >
-              Nader Amer
-            </Typography>
-
             <IconButton
+              edge="start"
+              aria-label="open drawer"
+              onClick={toggleDrawer}
               sx={{
-                color: navyColor,
-                backgroundColor: "#e6f1ff",
-                fontSize: "18px",
-                fontWeight: "bold",
+                marginRight: "36px",
+                color: "#777777",
+                ...(open && { display: "flex" }),
               }}
             >
-              NA
+              <ChevronLeftIcon
+                sx={{ display: "none", ...(open && { display: "flex" }) }}
+              />
+              <MenuIcon />
             </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{ "& .MuiDrawer-paper": { backgroundColor: navyColor } }}
-      >
-        <Toolbar
+            <Typography
+              align="left"
+              component="h1"
+              variant="subtitle1"
+              color="inherit"
+              noWrap
+              sx={{ flexGrow: 1, fontWeight: "bold" }}
+            >
+              Good Morning!
+              <Typography
+                variant="span"
+                sx={{ fontWeight: "normal", marginLeft: "10px" }}
+              >
+                {curDT}
+              </Typography>
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton color="inherit">
+                <HelpOutlineIcon />
+              </IconButton>
+              <IconButton color="inherit">
+                <Badge badgeContent={4} color="primary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <Divider orientation="vertical" variant="middle" flexItem />
+              <Typography
+                variant="subtitle1"
+                color="initial"
+                sx={{ color: navyColor, fontWeight: "bold" }}
+              >
+                Nader Amer
+              </Typography>
+
+              <IconButton
+                sx={{
+                  color: navyColor,
+                  backgroundColor: "#e6f1ff",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                }}
+              >
+                NA
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          open={open}
+          sx={{
+            "& .MuiDrawer-paper": { backgroundColor: navyColor },
+          }}
+        >
+          <Toolbar
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 1,
+              backgroundColor: "#050e2d",
+            }}
+          >
+            <img src={logo} alt="logo" />
+          </Toolbar>
+
+          <FormControl
+            sx={{
+              m: 1,
+              width: "25ch",
+              display: "none",
+              ...(open && { display: "flex" }),
+            }}
+            variant="outlined"
+          >
+            <OutlinedInput
+              fullWidth
+              id="outlined-adornment-weight"
+              placeholder="Quick access"
+              endAdornment={
+                <InputAdornment position="end">
+                  {" "}
+                  <Search />
+                </InputAdornment>
+              }
+              inputProps={{
+                "aria-label": "weight",
+              }}
+              sx={{ background: "#fff", borderRadius: "50px" }}
+            ></OutlinedInput>
+          </FormControl>
+
+          <Divider />
+          <List sx={{ color: grayColor }} component="nav">
+            <ListItemButton>
+              <ListItemIcon>
+                <DashboardIcon sx={{ color: grayColor }} />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItemButton>
+
+            <DashList
+              isOpen={open}
+              grayColor={grayColor}
+              navyColor={navyColor}
+            />
+          </List>
+        </Drawer>
+        <Box
+          component="main"
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            px: [1],
-            backgroundColor: "#050e2d",
+            flexDirection: "column",
+
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
           }}
         >
-          <img src={logo} />
-        </Toolbar>
-
-        <FormControl
-          sx={{
-            m: 1,
-            width: "25ch",
-            display: "none",
-            ...(open && { display: "flex" }),
-          }}
-          variant="outlined"
-        >
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            placeholder="Quick access"
-            endAdornment={
-              <InputAdornment position="end">
-                {" "}
-                <Search />
-              </InputAdornment>
-            }
-            inputProps={{
-              "aria-label": "weight",
-            }}
-            sx={{ background: "#fff", borderRadius: "50px" }}
-          ></OutlinedInput>
-        </FormControl>
-
-        <Divider />
-        <List sx={{ color: grayColor }} component="nav">
-          <ListItemButton>
-            <ListItemIcon>
-              <DashboardIcon sx={{ color: grayColor }} />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-
-          <DashList isOpen={open} grayColor={grayColor} navyColor={navyColor} />
-        </List>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
-        }}
-      >
-        <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-            <Typography
-              variant="h5"
-              element="h5"
-              sx={{ color: navyColor, fontWeight: "bold" }}
+          <Toolbar />
+          <Container
+            fixed
+            maxWidth="false"
+            disableGutters
+            sx={{ my: 3, mx: 3 }}
+          >
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
             >
-              User Management
-            </Typography>
-            <Button
-              className="add-new-btn"
-              variant="contained"
-              sx={{ backgroundColor: "#22a565" }}
-              onClick={handleClickOpen}
-            >
-              + Add New
-            </Button>
-          </Box>
-          <UserModal
-            open={openDialog}
-            handleClose={handleClose}
-            handleFormSubmit={handleFormSubmit}
-            editUser={editUser}
-          />
+              <Typography
+                variant="h5"
+                element="h5"
+                sx={{ color: navyColor, fontWeight: "bold" }}
+              >
+                User Management
+              </Typography>
+              <Button
+                className="add-new-btn"
+                variant="contained"
+                sx={{
+                  backgroundColor: "button.green",
+                  "&:hover": {
+                    backgroundColor: "state.hover",
+                  },
+                }}
+                onClick={handleClickOpen}
+              >
+                + Add New
+              </Button>
+            </Box>
+            <UserModal
+              navyColor={navyColor}
+              open={openDialog}
+              handleClose={handleClose}
+              handleFormSubmit={handleFormSubmit}
+              editUser={editUser}
+            />
 
-          <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <Users newUsers={newUser} handleEdit={handleEdit} />
-            </Paper>
-          </Grid>
-          <Copyright sx={{ pt: 4 }} />
-        </Container>
+            <Container disableGutters maxWidth="false">
+              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                <Users newUsers={newUser} handleEdit={handleEdit} />
+              </Paper>
+            </Container>
+            <Copyright sx={{ pt: 4 }} />
+          </Container>
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
