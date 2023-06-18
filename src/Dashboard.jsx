@@ -1,15 +1,3 @@
-// import React, { Component } from "react";
-// import Button from "@mui/material/Button";
-
-// export default class Sidebar extends Component {
-//   render() {
-//     return (
-//       <div>
-//         <Button variant="contained">Hello World</Button>
-//       </div>
-//     );
-//   }
-// }
 import logo from "./logo.png";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
@@ -118,50 +106,6 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//   zIndex: theme.zIndex.drawer + 1,
-//   transition: theme.transitions.create(["width", "margin"], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   ...(open && {
-//     marginLeft: drawerWidth,
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     transition: theme.transitions.create(["width", "margin"], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//   }),
-// }));
-
-// const Drawer = styled(MuiDrawer, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//   "& .MuiDrawer-paper": {
-//     position: "relative",
-//     whiteSpace: "nowrap",
-//     width: drawerWidth,
-//     transition: theme.transitions.create("width", {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//     boxSizing: "border-box",
-//     ...(!open && {
-//       overflowX: "hidden",
-//       transition: theme.transitions.create("width", {
-//         easing: theme.transitions.easing.sharp,
-//         duration: theme.transitions.duration.leavingScreen,
-//       }),
-//       width: theme.spacing(7),
-//       [theme.breakpoints.up("sm")]: {
-//         width: theme.spacing(9),
-//       },
-//     }),
-//   },
-// }));
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -187,6 +131,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -211,19 +156,12 @@ export default function Dashboard() {
     setEditUser(e.row);
   };
 
-  //   const handleDelete = () => {
-  //   if (selectedRow) {
-  //     const updatedRows = users.filter((row) => row.id !== selectedRow.id);
-  //     setUsers(updatedRows);
-  //     setSelectedRow(null);
-  //   }
-  // };
-
   const handleFormSubmit = (formValues) => {
     const jsonFormValues = formValues;
     setNewUser(jsonFormValues);
   };
 
+  // could use moment
   const curDT = new Date().toUTCString().substring(0, 22);
   return (
     <ThemeProvider theme={theme}>

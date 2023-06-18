@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 
 import { InputLabel, MenuItem, Link, Button, Divider } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import DownloadIcon from "@mui/icons-material/Download";
 
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -331,8 +332,9 @@ export default function Users({ newUsers, handleEdit }) {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              defaultValue="All Times"
-              label="Creation Date"
+              // isn't seen for controlled components
+              // defaultValue="All Times"
+              label={"Creation Date"}
               value={value === "All Times" ? dayjs("2020-01-01") : value}
               sx={{ m: 1 }}
               onChange={(newValue) => setValue(newValue)}
@@ -345,78 +347,105 @@ export default function Users({ newUsers, handleEdit }) {
         <Box
           sx={{
             display: "flex",
-            gap: 1,
+            justifyContent: "space-between",
           }}
         >
-          <Typography overflow={"visible"} sx={{ color: "text.dark" }}>
-            {selected == null || selected.length == 0
-              ? ""
-              : selected.length + " rows selected"}
-          </Typography>
-          {!(selected == null || selected.length == 0) && (
-            <Divider orientation="vertical" flexItem />
-          )}
-          <Button
+          <Box
             sx={{
-              p: 0,
-              m: 0,
-              minWidth: 30,
-
-              backgroundColor: "button.grey",
-              position: "sticky",
+              display: "flex",
+              gap: 1,
             }}
           >
-            <ModeEditOutlineIcon sx={{ color: "text.dark" }} />
-          </Button>
-          <Button
-            aria-label="delete"
-            onClick={handleDelete}
-            sx={{
-              p: 0,
-              m: 0,
-              minWidth: 30,
-
-              backgroundColor: "button.grey",
-              position: "sticky",
-            }}
-          >
-            <NotInterestedIcon sx={{ fontSize: "16px", color: "text.dark" }} />
-          </Button>
-          <Button
-            sx={{
-              p: 0,
-              m: 0,
-              minWidth: 30,
-
-              backgroundColor: "button.grey",
-              position: "sticky",
-            }}
-          >
-            <LockIcon sx={{ fontSize: "16px", color: "text.dark" }} />
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "button.grey",
-              position: "sticky",
-              textTransform: "none",
-            }}
-          >
-            <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
-              Assign to Profile
+            <Typography overflow={"visible"} sx={{ color: "text.dark" }}>
+              {selected == null || selected.length == 0
+                ? ""
+                : selected.length + " rows selected"}
             </Typography>
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "button.grey",
-              position: "sticky",
+            {!(selected == null || selected.length == 0) && (
+              <Divider orientation="vertical" flexItem />
+            )}
+            <Button
+              sx={{
+                p: 0,
+                m: 0,
+                minWidth: 30,
 
-              textTransform: "none",
-            }}
-          >
-            <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
-              Assign to Group
-            </Typography>
-          </Button>
+                backgroundColor: "button.grey",
+                position: "sticky",
+              }}
+            >
+              <ModeEditOutlineIcon sx={{ color: "text.dark" }} />
+            </Button>
+            <Button
+              aria-label="delete"
+              onClick={handleDelete}
+              sx={{
+                p: 0,
+                m: 0,
+                minWidth: 30,
+
+                backgroundColor: "button.grey",
+                position: "sticky",
+              }}
+            >
+              <NotInterestedIcon
+                sx={{ fontSize: "16px", color: "text.dark" }}
+              />
+            </Button>
+            <Button
+              sx={{
+                p: 0,
+                m: 0,
+                minWidth: 30,
+
+                backgroundColor: "button.grey",
+                position: "sticky",
+              }}
+            >
+              <LockIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "button.grey",
+                position: "sticky",
+                textTransform: "none",
+              }}
+            >
+              <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
+                Assign to Profile
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "button.grey",
+                position: "sticky",
+
+                textTransform: "none",
+              }}
+            >
+              <Typography sx={{ fontSize: "10px", color: "text.dark" }}>
+                Assign to Group
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                p: 0,
+                m: 0,
+                minWidth: 30,
+
+                backgroundColor: "button.grey",
+                position: "sticky",
+              }}
+            >
+              <MoreVertIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+            </Button>
+            <Link
+              component="button"
+              sx={{ fontSize: "12px", color: "text.dark" }}
+            >
+              Unselect all
+            </Link>
+          </Box>
           <Button
             sx={{
               p: 0,
@@ -427,14 +456,8 @@ export default function Users({ newUsers, handleEdit }) {
               position: "sticky",
             }}
           >
-            <MoreVertIcon sx={{ fontSize: "16px", color: "text.dark" }} />
+            <DownloadIcon sx={{ fontSize: "16px", color: "text.dark" }} />
           </Button>
-          <Link
-            component="button"
-            sx={{ fontSize: "12px", color: "text.dark" }}
-          >
-            Unselect all
-          </Link>
         </Box>
         <DataGrid
           rows={users}
